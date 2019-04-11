@@ -1,0 +1,58 @@
+{% extends  'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block main %}
+
+{% if user.is_authenticated %}
+
+	<meta http-equiv="REFRESH" content="0;url={% url 'Music:User_View' user.id %}">
+
+{% else %}
+
+<div  class="col-4 ">
+	{% if form.errors %}
+	  <p>Your username and password didn't match. Please try again.</p>
+	{% endif %}
+
+
+	{% if envoi %}Votre message a bien été envoyé !{% endif %}
+
+
+		<!-- Video -->
+			<header>
+		  <div class="overlay"></div>
+		  <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+		    <source src="https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4" type="video/mp4">
+		  </video>
+		  <div class="container h-100">
+		    <div class="d-flex h-100 text-center align-items-center">
+		      <div class="w-100 text-white">
+		        
+		        <h4 class="card-title">Log in</h4> 
+
+					<form method="post">
+					{% csrf_token %}
+					<input type="hidden" name="next" value="{{ next }}">
+
+					{{ form|crispy }}
+
+					<button type="submit" class="btn btn-primary btn-block">Log in</button>
+					</form>
+				</br>
+
+					<div class="d-flex h-100 text-center ">Vous n'avez pas de compte?  <a href="{% url 'Music:signup' %}"><u>Inscrivez-vous !</u></a></div>
+
+
+		      </div>
+		    </div>
+		  </div>
+		</header>
+{% endif %}
+
+</div>
+
+{% endblock %}
+

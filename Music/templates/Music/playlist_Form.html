@@ -1,0 +1,17 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+
+
+<h1>{{ playlist.title }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'Music:playlist' playlist.id %}" method="post">
+{% csrf_token %}
+{% for track in playlist.track_set.all %}
+    <input type="radio" name="track" id="track{{ forloop.counter }}" value="{{ track.track_title }}">
+    <label for="track{{ forloop.counter }}">{{ track.track_title }}</label><br>
+{% endfor %}
+<input type="submit" value="Vote">
+</form>

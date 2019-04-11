@@ -1,0 +1,87 @@
+{% extends  'base.html' %}
+
+{% block title %} Playlist page {% endblock %}
+
+
+{% block nav_list %}
+    
+
+    {% if user.is_authenticated %}                          <!-- For Song button -->
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Songs
+            </a>
+            <!-- dropdown-menu  -->
+            <div class="dropdown-menu dropdown-menu-right animate slideIn" aria-labelledby="navbarDropdown">
+                {% for track in track_list %}
+                    <a class="dropdown-item" href="{% url 'Music:track' track.track_title %}"> {{ track.track_title}} </a>    
+                {% endfor %}
+            </div>
+
+        </li>
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+
+
+{% block main %}
+ 
+	{% if user.is_authenticated %}
+
+	
+
+		<!-- Header -->
+		<span class="bg-primary text-center py-5 mb-4">
+		  <div class="container">
+		    <h1 class="font-weight-light text-white"> There are {{ user.username }} 's songs </h1>
+		  </div>
+		</span>
+		<div class="col-12" style="height:50px;"></div>
+
+        <!-- 'Add-Track' button -->
+        <a href="{% url 'Music:track_add' %}" class="btn btn-primary btn-primary">Add track <span class="glyphicon glyphicon-align-justify"></span></a>
+        
+        <div class="col-12" style="height:50px;"></div>
+
+        {% if track_list %}
+        
+		<!-- Page Content -->
+		<div class="container">
+		  <div class="row">
+
+		    <!-- Playlists -->
+		    
+
+		    	{% for track in track_list %}
+				    <div class="col-xl-3 col-md-6 mb-4">
+				      <div class="card border-0 shadow">
+				        <img src="https://source.unsplash.com/random/500x350" class="card-img-top" alt="...">
+				        <div class="card-body text-center">
+				          <h5 class="card-title mb-0">
+				          	<a href="{% url 'Music:track' track.track_title %}">{{ track.track_title }}</a>
+				          </h5>
+				          <div class="card-text text-black-50">
+				          	<a href="{% url 'Music:playlist' track.playlist.id %}">{{ track.playlist }}</a>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+			    {% endfor %}
+
+		    {% else %}
+    			<p>No track available.</p>
+			{% endif %}
+		</div>
+	</div>
+
+
+	{% else %}
+	{% endif %}
+
+
+{% endblock %}
+
