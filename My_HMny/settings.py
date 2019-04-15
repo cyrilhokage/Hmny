@@ -25,7 +25,7 @@ SECRET_KEY = '4132624p*#soo*2=^y(c2#cne4o=b+9%e481lo$n4pir63x!2m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['harmonyapp.appspot.com']
 
 
 # Application definition
@@ -75,12 +75,43 @@ WSGI_APPLICATION = 'My_HMny.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+#DATABASES = {
+    #'default': {
+   #     'ENGINE': 'django.db.backends.sqlite3',
+  #      'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   # }
+#}
+
+# [START db_setup]
+if os.getenv('GAE_APPLICATION', None):
+    # Running on production App Engine, so connect to Google Cloud SQL using
+    # the unix socket at /cloudsql/<your-cloudsql-connection string>
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '/cloudsql/harmonyapp:europe-west1:harmony-instance',
+            'USER': 'system',
+            'PASSWORD': 'root',
+            'NAME': 'harmony',
+        }
     }
-}
+else:
+    # Running locally so connect to either a local MySQL instance or connect 
+    # to Cloud SQL via the proxy.  To start the proxy via command line: 
+    #    $ cloud_sql_proxy -instances=[INSTANCE_CONNECTION_NAME]=tcp:3306 
+    # See https://cloud.google.com/sql/docs/mysql-connect-proxy
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+            'NAME': 'harmony',
+            'USER': 'system',
+            'PASSWORD': 'root',
+        }
+    }
+# [END db_setup]
 
 
 # Password validation
@@ -119,7 +150,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+# Google App Engine: set static root for local static files
+# https://cloud.google.com/appengine/docs/flexible/python/serving-static-files
 STATIC_URL = '/static/'
+STATIC_ROOT = 'static'
+
 
 LOGIN_REDIRECT_URL = '/Music/'
 
@@ -130,3 +165,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'noubouec@gmail.com'
 EMAIL_HOST_PASSWORD = 'Angylle1'
 EMAIL_PORT = 587
+
+
+
